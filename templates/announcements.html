@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Announcements | FaceLedger{% endblock %}
+{% block content %}
+<style>
+.announcements-heading{justify-content:center;text-align:center;padding:28px 24px 18px}
+.announcement-item{padding:22px 26px;border-top:1px solid var(--line)}
+.announcement-item>div{max-width:100%;overflow-wrap:anywhere}
+.announcement-item .tag{margin-bottom:12px}
+.announcement-item h3{font-size:21px;line-height:1.2;margin:0 0 10px;overflow-wrap:anywhere}
+.announcement-item p{font-size:14px;line-height:1.55;margin:0 0 16px;white-space:pre-wrap;overflow-wrap:anywhere;color:#5f6c64}
+.announcement-item small{display:block;font:11px 'DM Mono';line-height:1.5;color:var(--muted);overflow-wrap:anywhere}.announcement-meta{display:flex;align-items:center;justify-content:space-between;gap:16px}.announcement-delete{border:0;background:transparent;color:var(--red);cursor:pointer;font:11px 'DM Mono';padding:4px 0}.announcement-delete:hover{text-decoration:underline}
+@media(max-width:800px){.announcement-item{padding:20px}.announcements-heading{padding-left:18px;padding-right:18px}}
+</style>
+<div class="page-heading"><div><p class="eyebrow">CLASSROOM / NOTICE BOARD</p><h1>Announcements</h1><p class="muted">Publish updates to every student or a specific division.</p></div></div>
+<div class="content-grid"><section class="form-panel"><p class="eyebrow">PUBLISH UPDATE</p><form method="post" class="stack-form"><label>Title<input name="title" required placeholder="e.g. Internal assessment schedule"></label><label>Audience<select name="division"><option value="">All divisions</option>{% for division in divisions %}<option value="{{ division }}">Division {{ division }}</option>{% endfor %}</select></label><label>Message<textarea name="body" rows="7" required></textarea></label><button class="button primary" type="submit">Publish announcement <span>↗</span></button></form></section><section class="table-panel"><div class="section-head announcements-heading"><div><p class="eyebrow">PUBLISHED UPDATES</p><h2>Notice board</h2></div></div>{% for item in announcements %}<article class="announcement-item"><div><span class="tag">{% if item.division %}Division {{ item.division }}{% else %}Everyone{% endif %}</span><h3>{{ item.title }}</h3><p>{{ item.body }}</p><div class="announcement-meta"><small>{{ item.created_at.strftime('%d %b %Y · %H:%M') }} · {{ item.author.username if item.author else 'Staff' }}</small>{% if session.get('role') == 'admin' or item.author_id == session.get('user_id') %}<form method="post" action="{{ url_for('announcements.delete', announcement_id=item.id) }}" onsubmit="return confirm('Delete this announcement?')"><button class="announcement-delete" type="submit">Delete</button></form>{% endif %}</div></div></article>{% else %}<p class="empty">No announcements yet.</p>{% endfor %}</section></div>
+{% endblock %}

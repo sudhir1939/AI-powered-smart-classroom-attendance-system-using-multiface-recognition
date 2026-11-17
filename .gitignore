@@ -1,0 +1,15 @@
+venv/
+venv*/
+__pycache__/
+*.pyc
+instance/
+data/embeddings/
+exports/*.csv
+exports/*.xlsx
+.env
+
+# Android/Gradle generated files
+android_app/.gradle/
+android_app/**/build/
+android_app/.idea/
+android_app/local.properties

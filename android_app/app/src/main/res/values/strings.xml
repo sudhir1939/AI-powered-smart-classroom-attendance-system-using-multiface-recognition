@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">FaceLedger</string>
+    <string name="server_url_hint">https://your-server.example.com</string>
+    <string name="login_title">Sign in</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="change_server">Change server</string>
+    <string name="log_out">Log out</string>
+    <string name="student_dashboard">Student dashboard</string>
+    <string name="teacher_dashboard">Teacher dashboard</string>
+    <string name="admin_dashboard">Admin dashboard</string>
+    <string name="announcements">Announcements</string>
+    <string name="attendance">Attendance</string>
+    <string name="sessions">Sessions</string>
+    <string name="error_network">Unable to reach the server.</string>
+    <string name="error_credentials">Invalid username or password.</string>
+</resources>

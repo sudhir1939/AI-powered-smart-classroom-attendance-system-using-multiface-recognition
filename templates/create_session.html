@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}New session | FaceLedger{% endblock %}
+{% block content %}<div class="center-panel"><p class="eyebrow">ATTENDANCE / NEW SESSION</p><h1>Create attendance session</h1><p class="muted">Choose a division first, then select one of its configured subjects.</p><form method="post" class="stack-form"><label>Division<select id="session-division" name="division" required><option value="">Select division</option>{% for division in divisions %}<option>{{ division }}</option>{% endfor %}</select></label><label>Subject<select id="session-subject" name="subject" required disabled><option value="">Select a division first</option></select></label><label>Classroom <small>(optional)</small><input name="classroom" placeholder="e.g. Lab 2"></label><button class="button primary" type="submit">Open camera <span>↗</span></button></form>{% if not divisions %}<div class="status-box error">Register at least one student before starting a session.</div>{% endif %}<div id="subject-message" class="status-box"></div></div>{% endblock %}
+{% block scripts %}<script>
+const divisionSelect = document.getElementById('session-division');
+const subjectSelect = document.getElementById('session-subject');
+const subjectMessage = document.getElementById('subject-message');
+divisionSelect?.addEventListener('change', async () => {
+    subjectSelect.innerHTML = '<option value="">Loading subjects...</option>';
+    subjectSelect.disabled = true;
+    subjectMessage.textContent = '';
+    if (!divisionSelect.value) return;
+    try {
+        const response = await fetch('{{ url_for("attendance.subjects_for_division") }}?division=' + encodeURIComponent(divisionSelect.value));
+        const result = await response.json();
+        subjectSelect.innerHTML = '<option value="">Select subject</option>';
+        result.subjects.forEach((subject) => {
+            const option = document.createElement('option');
+            option.value = subject.name;
+            option.textContent = subject.name;
+            subjectSelect.appendChild(option);
+        });
+        subjectSelect.disabled = result.subjects.length === 0;
+        if (!result.subjects.length) subjectMessage.textContent = 'No subjects are configured for this division. Ask an administrator to add one.';
+    } catch (error) {
+        subjectSelect.innerHTML = '<option value="">Unable to load subjects</option>';
+        subjectMessage.textContent = 'Subjects could not be loaded. Try again.';
+        subjectMessage.className = 'status-box error';
+    }
+});
+</script>{% endblock %}
